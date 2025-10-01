@@ -1,0 +1,1 @@
+"""Django management для додатку core."""

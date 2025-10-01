@@ -1,0 +1,27 @@
+[Unit]
+Description=Dark Tower Snake Telegram Bot
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/home/groomsha/dark-tower-web
+Environment=PATH=/home/groomsha/dark-tower-web/.venv/bin
+Environment=PYTHONPATH=/home/groomsha/dark-tower-web/telegram
+ExecStart=/home/groomsha/dark-tower-web/.venv/bin/python telegram/bot.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/home/groomsha/dark-tower-web
+
+[Install]
+WantedBy=multi-user.target
