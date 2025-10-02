@@ -25,10 +25,10 @@ def main():
 
     if args.no_bot:
         print("🌐 Запуск Django сервера без бота...")
-        cmd = ['.venv/bin/python', 'manage.py'] + args.django_args
+        cmd = ['.venv/Scripts/python.exe', 'manage.py'] + args.django_args
     else:
         print("🤖 Запуск Django сервера з телеграм ботом...")
-        cmd = ['.venv/bin/python', 'manage.py', 'run_telegram_bot']
+        cmd = ['.venv/Scripts/python.exe', 'manage.py', 'run_telegram_bot']
 
     # Запустити команду
     try:

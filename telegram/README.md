@@ -38,7 +38,7 @@ WEBHOOK_URL=https://yourdomain.com/webhook/
 ## Автозапуск
 
 Бот може автоматично запускатися:
-- Через systemd сервіс (файл `dark-tower-bot.service`)
+- Через systemd сервіс (файл `ahds-center-web.service`)
 - Через Django management команду: `python manage.py run_telegram_bot`
 - Разом з Django сервером через supervisor
 

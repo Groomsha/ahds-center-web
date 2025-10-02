@@ -1,0 +1,27 @@
+[Unit]
+Description=AHDS Center Web Telegram Bot
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/home/groomsha/ahds-center-web
+Environment=PATH=/home/groomsha/ahds-center-web/.venv/bin
+Environment=PYTHONPATH=/home/groomsha/ahds-center-web/telegram
+ExecStart=/home/groomsha/ahds-center-web/.venv/bin/python telegram/bot.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/home/groomsha/ahds-center-web
+
+[Install]
+WantedBy=multi-user.target

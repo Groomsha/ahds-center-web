@@ -11,7 +11,8 @@
 - `core/` - Базові компоненти та утиліти
 - `hard/` - Основний Django додаток
 - `telegram/` - Telegram бот на aiogram
-- `www/` - Основні налаштування Django проекту
+- `www/` - Основні налаштування Django проекту (містить management команди)
+- `run_django_bot.py` - Основний скрипт для запуску Django з ботом
 
 ## Технології
 
@@ -40,6 +41,12 @@ python manage.py migrate
 # Створіть .env файл у папці telegram/ з токеном:
 echo "BOT_TOKEN=your_bot_token_here" > telegram/.env
 echo "ADMIN_ID=your_telegram_id" >> telegram/.env
+```
+
+### 4. Windows сумісність
+Проект повністю сумісний з Windows. Для запуску використовуйте основний скрипт:
+```bash
+python run_django_bot.py
 ```
 
 ### 📋 Аргументи run_django_bot.py скрипта
@@ -104,11 +111,14 @@ python run_django_bot.py --no-bot runserver 0.0.0.0:8000 --noreload
 
 #### Через Django management команди:
 ```bash
-# Запуск Django сервера з ботом
+# Запуск Django сервера з ботом (команда знаходиться в www/management/commands/)
 python manage.py run_telegram_bot
 
 # З кастомними аргументами
 python manage.py run_telegram_bot --host=0.0.0.0 --port=8000
+
+# Запуск без бота
+python manage.py runserver
 ```
 
 #### Окремі компоненти:
@@ -148,10 +158,10 @@ python manage.py runserver 0.0.0.0:8000 --noreload
 #### Автозапуск через systemd:
 ```bash
 # Скопіюйте та активуйте сервіс
-sudo cp telegram/dark-tower-bot.service /etc/systemd/system/
+sudo cp telegram/ahds-center-web.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable dark-tower-bot
-sudo systemctl start dark-tower-bot
+sudo systemctl enable ahds-center-web
+sudo systemctl start ahds-center-web
 ```
 
 ### ✅ Перевірка статусу
@@ -164,8 +174,8 @@ python manage.py showmigrations
 
 #### Системні сервіси:
 ```bash
-sudo systemctl status dark-tower-bot
-journalctl -u dark-tower-bot -f
+sudo systemctl status ahds-center-web
+journalctl -u ahds-center-web -f
 ```
 
 ## Додаткові команди
@@ -199,10 +209,10 @@ python manage.py collectstatic
 ### Systemd сервіс
 Проект містить готовий systemd сервіс для автоматичного запуску Telegram бота:
 ```bash
-sudo cp telegram/dark-tower-bot.service /etc/systemd/system/
+sudo cp telegram/ahds-center-web.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable dark-tower-bot
-sudo systemctl start dark-tower-bot
+sudo systemctl enable ahds-center-web
+sudo systemctl start ahds-center-web
 ```
 
 ### Docker (рекомендовано для продакшену)
