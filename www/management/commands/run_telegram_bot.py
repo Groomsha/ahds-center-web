@@ -73,33 +73,42 @@ class Command(BaseCommand):
     def start_bot(self) -> None:
         """Запустити телеграм бота в окремому потоці."""
         try:
-            # Add telegram package to Python path
-            telegram_path = os.path.join(settings.BASE_DIR, 'telegram')
-            if telegram_path not in sys.path:
-                sys.path.insert(0, telegram_path)
-
-            # Import and start bot
-            import importlib.util
-            bot_spec = importlib.util.spec_from_file_location(
-                "bot",
-                os.path.join(telegram_path, "bot.py")
-            )
-            bot_main = None
-
-            if bot_spec and bot_spec.loader:
-                bot_module = importlib.util.module_from_spec(bot_spec)
-                bot_spec.loader.exec_module(bot_module)
-                bot_main = bot_module.main
-
-            if not bot_main:
-                raise ImportError("Could not import bot main function")
-
             def run_bot() -> None:
                 """Запустити бота в потоці."""
                 try:
-                    import asyncio
-                    if bot_main:
-                        asyncio.run(bot_main())
+                    # Set proper environment for bot
+                    bot_env = os.environ.copy()
+                    bot_env['PYTHONPATH'] = f"{settings.BASE_DIR}{os.pathsep}{settings.BASE_DIR}/telegram"
+
+                    # Run bot as separate process
+                    import subprocess
+                    process = subprocess.Popen(
+                        ['python', 'telegram/bot.py'],
+                        cwd=settings.BASE_DIR,
+                        env=bot_env,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        text=True
+                    )
+
+                    # Monitor process
+                    while not self.bot_shutdown.is_set() and process.poll() is None:
+                        self.bot_shutdown.wait(1)
+
+                    if process.poll() is None:
+                        process.terminate()
+                        process.wait()
+
+                    if process.returncode != 0:
+                        stdout, stderr = process.communicate()
+                        self.stdout.write(
+                            self.style.ERROR(f'❌ Bot process error: {stderr}')
+                        )
+                    else:
+                        self.stdout.write(
+                            self.style.SUCCESS('🤖 Telegram bot finished successfully')
+                        )
+
                 except Exception as e:
                     self.stdout.write(
                         self.style.ERROR(f'❌ Bot error: {e}')
